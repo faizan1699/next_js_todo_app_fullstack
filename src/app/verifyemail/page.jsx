@@ -36,13 +36,13 @@ export default function VerifyEmailPage() {
         if (token.length > 0) {
             verifyUserEmail();
         }
-    }, [token]);
+    }, [token , verifyUserEmail]);
 
     return (
         <div className="flex flex-col items-center justify-center min-h-screen py-2">
 
             <h2 className="text-4xl">Verify Email</h2>
-            <h6 className="p-2 bg-orange-500 my-2 text-black">{msg}</h6>
+            <h6 className="p-2 bg-red-500 my-2 text-black">{msg}</h6>
             <h2 className="p-2 bg-orange-500 text-black">{token ? `${token}` : "no token"}</h2>
 
             {verified && (
