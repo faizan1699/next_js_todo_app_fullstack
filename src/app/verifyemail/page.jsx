@@ -19,7 +19,8 @@ export default function VerifyEmailPage() {
             setMsg(response.data.message);
 
         } catch (error) {
-            setError(true);
+            setError(true);a
+            console.log("error from email sending")
             console.log(error.response.data.message);
             setMsg(error.response.data.message);
         }
