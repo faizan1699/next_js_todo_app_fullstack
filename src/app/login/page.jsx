@@ -1,12 +1,14 @@
-"use client";
+"use client"
 
 import React, { useState } from 'react';
 import axios from 'axios';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { Box, Button, TextField, Typography, useMediaQuery } from '@mui/material';
 
-const Page = () => {
+import { Box, Button, TextField, Typography, useMediaQuery } from '@mui/material';
+import { useRouter } from 'next/navigation';
+
+const Login = () => {
+
     const router = useRouter();
     const matches = useMediaQuery('(min-width:650px)');
 
@@ -50,19 +52,41 @@ const Page = () => {
                 setMsg(null);
             }, 8000);
         }
-
-
     };
 
     const showPassword = () => {
         setPassType(passtype === "password" ? "text" : "password");
     };
 
+    const forgetPassword = async () => {
+        const email = prompt("Please enter your email:");
+
+        if (email === null) {
+            alert("Email input was canceled");
+            return;
+        }
+
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Basic email validation
+        if (!emailRegex.test(email)) {
+            alert("Invalid Email. Please check your email format.");
+            return;
+        }
+
+        try {
+            const response = await axios.post('/api/users/resetpassword', { email });
+            console.log(response.data.message);
+            setMsg(response.data.message)
+        } catch (error) {
+            console.error(error);
+            alert("Failed to reset password. Please try again later.");
+        }
+    };
+
     return (
         <Box className='m-5'>
             <Box component="div" sx={{ maxWidth: matches ? "45%" : "95%", mx: "auto" }}>
-                <Typography component="h3" variant="h3" className='text-center mb-2 text-black-200 font-extrabold'>Login</Typography>
-                <Typography component="p" variant="p" className='text-center text-red-600 mb-2 text-black-200 font-extrabold'>{msg}</Typography>
+                <Typography variant="h3" className='text-center mb-2 text-black-200 font-extrabold'>Login</Typography>
+                <Typography variant="body1" className='text-center text-red-600 mb-2 text-black-200 font-extrabold'>{msg}</Typography>
                 <form onSubmit={handleLogin} method="post">
                     <TextField
                         name="email"
@@ -86,8 +110,9 @@ const Page = () => {
                         sx={{ mb: 1 }}
                     />
 
-                    <Box component="div" className='justify-end flex '>
-                        <Button className='text-xs  hover:bg-red-400 hover:text-white mb-1' type="button" onClick={showPassword}>
+                    <Box component="div" className='justify-end flex g-5'>
+                        <Button className='text-xs bg-red-500 text-white hover:bg-red-500 hover:text-white mb-1 me-2' type="button" onClick={forgetPassword}>Forget Password</Button>
+                        <Button className='text-xs bg-red-500 text-white hover:bg-red-500 hover:text-white mb-1' type="button" onClick={showPassword}>
                             {passtype === "password" ? "Show Password" : "Hide Password"}
                         </Button>
                     </Box>
@@ -95,7 +120,6 @@ const Page = () => {
                     <Button type="submit" fullWidth variant='contained' sx={{ backgroundColor: "#000" }}>
                         {loading ? "Loading..." : "Login"}
                     </Button>
-
                 </form>
 
                 <Box component="div" className='mt-2 text-end hover:text-red-500'>
@@ -107,4 +131,4 @@ const Page = () => {
     );
 }
 
-export default Page;
+export default Login;

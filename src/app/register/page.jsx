@@ -31,7 +31,13 @@ const Register = () => {
 
     const handleRegister = async (e) => {
         e.preventDefault();
+
         setLoading(true);
+
+        if (loading) {
+            setMsg(null);
+            setEmailNotification(null);
+        }
 
         const { username, email, password } = inputs;
 
@@ -53,18 +59,23 @@ const Register = () => {
         }
         else {
             try {
+
                 const response = await axios.post("/api/users/auth/signup", inputs);
-               
-                setMsg(response.data.message);
-               
-                setEmailNotification(true);
-                console.log(response.data.message);
+
+                const message = response.data.message;
+
+                setMsg(message);
+                console.log(message);
 
                 if (response.status === 200) {
 
+                    if (message === "User already exists") { }
+                    else {
+                        setEmailNotification(true);
+                    }
                     setLoading(false);
                     setTimeout(() => {
-                        // router.push('/login');
+                       router.push('/login');
                     }, 4000);
                 } else {
                     setLoading(false);
@@ -73,12 +84,12 @@ const Register = () => {
             } catch (error) {
                 setMsg(error.response.data.error);
                 setLoading(false);
-            } 
+            }
 
             setTimeout(() => {
                 setMsg(null);
                 setEmailNotification(null);
-            }, 10000);
+            }, 20000);
 
         }
 
@@ -93,9 +104,9 @@ const Register = () => {
             <Box component="div" sx={{ maxWidth: matches ? "45%" : "95%", mx: "auto" }}>
 
                 <Typography component="h1" variant="h3" className='text-center mb-2 text-black-200 font-extrabold'>Register</Typography>
-             
+
                 <Typography component="p" variant="p" className='text-center text-red-600 mb-2 text-black-200 font-extrabold'>{msg && msg} </Typography>
-               
+
                 {emailNotification === false && (
                     <Typography component="p" variant="p" className='text-center text-red-600 mb-2'>
                         Failed to send verification email. Please check your email address.
@@ -107,7 +118,7 @@ const Register = () => {
                     </Typography>
                 )}
 
-                <form onSubmit={handleRegister} autoComplete="off">
+                <form onSubmit={handleRegister} method="POST" autoComplete="off">
                     <TextField
                         name="username"
                         label="Username"
@@ -148,7 +159,7 @@ const Register = () => {
                     </Box>
 
                     <Button type="submit" className='hover:bg-blue-800' variant='contained' fullWidth sx={{ backgroundColor: "#000" }}>
-                        {loading ? "Loading" : "Register"}
+                        {loading ? "Loading ..." : "Register"}
                     </Button>
 
                 </form>

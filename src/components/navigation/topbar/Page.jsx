@@ -10,6 +10,7 @@ function Navbar() {
                     <Link href="/">Home</Link>
                 </div>
                 <div className="flex gap-10">
+                    <Link href="/home">Home</Link>
                     <Link href="/dashboard">Dashboard</Link>
                     <Link href="/login">Login</Link>
                     <Link href="/register">Register</Link>
