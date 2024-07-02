@@ -33,20 +33,18 @@ const Login = () => {
         setLoading(true);
         setMsg(null);
         try {
+
             const response = await axios.post("/api/users/auth/login", inputs);
             setMsg(response.data.message);
             setLoading(false);
-            if (response.data.success) {
-                router.push('/home');
-            } else {
-                router.push('/login');
-            }
+            router.push('/login');
+
             setTimeout(() => {
                 setMsg(null);
             }, 8000);
         } catch (error) {
             console.error(error);
-            setMsg(error.response.data.message || "Login failed");
+            setMsg(error.message);
             setLoading(false);
             setTimeout(() => {
                 setMsg(null);
@@ -58,28 +56,8 @@ const Login = () => {
         setPassType(passtype === "password" ? "text" : "password");
     };
 
-    const forgetPassword = async () => {
-        const email = prompt("Please enter your email:");
-
-        if (email === null) {
-            alert("Email input was canceled");
-            return;
-        }
-
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Basic email validation
-        if (!emailRegex.test(email)) {
-            alert("Invalid Email. Please check your email format.");
-            return;
-        }
-
-        try {
-            const response = await axios.post('/api/users/resetpassword', { email });
-            console.log(response.data.message);
-            setMsg(response.data.message)
-        } catch (error) {
-            console.error(error);
-            alert("Failed to reset password. Please try again later.");
-        }
+    const forgetPassword = () => {
+        router.push('/resetpassword');
     };
 
     return (
@@ -107,6 +85,7 @@ const Login = () => {
                         onChange={handleInputChange}
                         value={inputs.password}
                         fullWidth
+                        autoComplete='current-password'
                         sx={{ mb: 1 }}
                     />
 

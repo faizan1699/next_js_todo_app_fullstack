@@ -2,7 +2,7 @@ import { connect } from "@/dbconfig/dbconfig";
 import User from "@/models/usermodels";
 import { NextResponse } from "next/server";
 import bcryptjs from "bcryptjs";
-import { sendEmail } from "@/nodemailer/mailer";
+import { sendEmailVerification } from "@/nodemailer/mailer";
 
 export async function POST(req) {
   try {
@@ -14,9 +14,7 @@ export async function POST(req) {
     const user = await User.findOne({ email });
 
     if (user) {
-      return NextResponse.json(
-        { message: "User already exists" }
-      );
+      return NextResponse.json({ message: "User already exists" });
     }
 
     const salt = await bcryptjs.genSalt(10);
@@ -30,9 +28,9 @@ export async function POST(req) {
 
     const saveduser = await newUser.save();
 
-    await sendEmail({
+    console.log(saveduser._id);
+    await sendEmailVerification({
       email,
-      emailType: "VERIFY",
       userId: saveduser._id,
     });
 
@@ -42,7 +40,6 @@ export async function POST(req) {
       saveduser,
     });
   } catch (error) {
-    console.log("server reponse error");
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ message: "error.messagesss" }, { status: 500 });
   }
 }

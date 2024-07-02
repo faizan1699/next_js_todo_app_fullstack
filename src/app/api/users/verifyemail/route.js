@@ -2,48 +2,40 @@ import { connect } from "@/dbconfig/dbconfig";
 import User from "@/models/usermodels";
 import { NextRequest, NextResponse } from "next/server";
 
+// Establish a connection to the database
 connect();
 
 export async function POST(req) {
   try {
-    await connect();
-
     const reqBody = await req.json();
     const { token } = reqBody;
-
-    console.log("Received token:", token);
 
     const user = await User.findOne({
       verifyToken: token,
       verifyTokenExpiry: { $gt: new Date() },
     });
 
+    // Handle case where user with given token is not found
     if (!user) {
       return NextResponse.json(
         { message: "Invalid or expired token" },
         { status: 400 }
       );
     }
-    if (user.isEmailVerified) {
-      return NextResponse.json(
-        { message: "Email already verified" },
-        { status: 200 }
-      );
-    }
-    console.log("User found:", user);
-
-    // Update user verification status
+    // Update user verification status and clear token fields
     user.isEmailVerified = true;
     user.verifyToken = undefined;
     user.verifyTokenExpiry = undefined;
 
-    await user.save();
+    await user.save(); // Save updated user object
 
+    // Respond with success message
     return NextResponse.json({
       message: "Email verified successfully",
       success: true,
     });
   } catch (error) {
+    // Handle any errors that occur during the process
     console.error("Error during email verification:", error);
     return NextResponse.json(
       { error: "Internal Server Error" },

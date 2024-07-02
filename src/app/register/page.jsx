@@ -18,7 +18,7 @@ const Register = () => {
     const [inputs, setInputs] = useState({
         username: "",
         email: "",
-        password: ""
+        password: "12345678"
     });
 
     const handleInputChange = (e) => {
