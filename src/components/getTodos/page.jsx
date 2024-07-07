@@ -2,10 +2,20 @@
 
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import Cookies from 'js-cookie';
 
 const GetTodos = () => {
     const [loading, setLoading] = useState(false);
     const [todo, setTodo] = useState([]);
+    const [token, setToken] = useState({});
+
+    useEffect(() => {
+        const jwtToken = Cookies.get('jwt'); // Replace 'jwt' with your cookie name
+        if (jwtToken) {
+            setToken(jwtToken);
+            console.log("user token data" , token);
+        }
+    }, []);
 
     const fetchTodos = async () => {
         setLoading(true);

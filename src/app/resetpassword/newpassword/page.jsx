@@ -1,10 +1,11 @@
 "use client";
 
 import { useState } from 'react';
-import { Box, Button, TextField, Typography, useMediaQuery } from '@mui/material'
 import axios from 'axios';
 
 import { useRouter } from 'next/navigation';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
+import { Box, Button, IconButton, InputAdornment, TextField, Typography, useMediaQuery } from '@mui/material'
 
 const AddNewPassword = () => {
 
@@ -14,16 +15,25 @@ const AddNewPassword = () => {
     const email = localStorage.email;
 
     const [msg, setMsg] = useState(null);
-    const [otp, setOtp] = useState('636459');
+    const [otp, setOtp] = useState('');
+    const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
-
+    const [showPassword, setShowPassword] = useState(false);
     const handleChangeOTp = (e) => {
         setOtp(e.target.value);
     }
 
-    const handleOtpVerify = async (e) => {
-        e.preventDefault();
+    const toggleShowPassword = (e) => {
+        setShowPassword(!showPassword ? true : false);
+    }
 
+    const handleChangePassword = (e) => {
+        setPassword(e.target.value);
+    }
+
+    const handleUpdatePassword = async (e) => {
+        e.preventDefault();
+        // Handle OTP verification
         if (!otp) {
             setMsg("OTP is required");
         } else if (otp.length !== 6) {
@@ -31,17 +41,20 @@ const AddNewPassword = () => {
         } else {
             setLoading(true);
             try {
-                const response = await axios.post('/api/users/otpverify', { otp, email });
+                const response = await axios.post('/api/users/resetpassword/newpassword', { otp, email, password });
                 setMsg(response.data.message);
                 setLoading(false);
-                console.log("Response from verify email frontend:", response);
+                setOtp('');
+                router.push("/login");
             } catch (error) {
-                console.log("Error from verify email frontend:", error);
-                setMsg(error.message);
+                setMsg(error.response.data.message);
                 setLoading(false);
             }
         }
-    }
+
+
+    };
+
 
     return (
         <Box component="div" className="mt-6" sx={{ maxWidth: matches ? "45%" : "95%", mx: "auto" }}>
@@ -50,12 +63,13 @@ const AddNewPassword = () => {
 
             <Typography variant="body1" className='text-center text-red-600 mb-2 text-black-200 font-extrabold'>{msg}</Typography>
 
-            <form onSubmit={handleOtpVerify} method="post">
+            <form onSubmit={handleUpdatePassword} method="post">
+
                 <TextField
                     name="otp"
                     label="OTP"
                     size="small"
-                    type='number'
+                    type="number"
                     onChange={handleChangeOTp}
                     value={otp}
                     fullWidth
@@ -63,11 +77,38 @@ const AddNewPassword = () => {
                     autoComplete='off'
                 />
 
+                <TextField
+                    name="password"
+                    label="Password"
+                    size="small"
+                    type={showPassword ? 'text' : 'password'}
+                    onChange={handleChangePassword}
+                    value={password}
+                    fullWidth
+                    sx={{ mb: 1 }}
+                    autoComplete='off'
+                    InputProps={{
+                        endAdornment: (
+                            <InputAdornment position="end">
+                                <IconButton
+                                    aria-label="toggle password visibility"
+                                    onClick={toggleShowPassword}
+                                    edge="end"
+                                >
+                                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                                </IconButton>
+                            </InputAdornment>
+                        ),
+                    }}
+                />
+
                 <Button type="submit" fullWidth variant='contained' sx={{ backgroundColor: "#000" }}>
-                    {loading ? "Loading..." : "Verify OTP"}
+                    {loading ? "Loading..." : "Update Password"}
                 </Button>
             </form>
-        </Box>
+
+        </Box >
+
     )
 }
 

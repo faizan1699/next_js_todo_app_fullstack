@@ -35,7 +35,7 @@ const Login = () => {
         try {
 
             const response = await axios.post("/api/users/auth/login", inputs);
-            setMsg(response.data.message);
+            setMsg(response?.data?.message);
             setLoading(false);
             router.push('/login');
 
@@ -44,7 +44,7 @@ const Login = () => {
             }, 8000);
         } catch (error) {
             console.error(error);
-            setMsg(error.message);
+            setMsg(error.response.data.message);
             setLoading(false);
             setTimeout(() => {
                 setMsg(null);

@@ -31,6 +31,7 @@ const ResetPassword = () => {
 
                 setTimeout(() => {
                     router.push('resetpassword/newpassword');
+                    setMsg(null);
                 }, 5000);
 
             } catch (error) {
@@ -42,10 +43,6 @@ const ResetPassword = () => {
         else {
             setMsg("Email Required");
         }
-
-        setTimeout(() => {
-            setMsg(null);
-        }, 15000);
 
     }
 

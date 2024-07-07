@@ -4,7 +4,7 @@ export function middleware(request) {
   const path = request.nextUrl.pathname;
 
   // Define public paths that don't require authentication
-  const isPublicPath = path === "/login" || path === "/signup";
+  const isPublicPath = path === "/login" || path === "/signup" || path === "/resetpass";
 
   // Retrieve the JWT token from cookies
   const token = request.cookies.get("jwt")?.value || "";
@@ -21,9 +21,6 @@ export function middleware(request) {
 
   // If token is found, allow the request
   return NextResponse.next();
-
-  console.log("middle excute")
-
 }
 
 export const config = {
