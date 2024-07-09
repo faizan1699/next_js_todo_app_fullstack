@@ -16,13 +16,12 @@ const todosSchema = new mongoose.Schema(
     },
     user: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "users",
       required: true,
     },
   },
   { timestamps: true }
 );
 
-const TodoModel = mongoose.models.todo || mongoose.model("Todo", todosSchema);
+const TodoModel = mongoose.models.Todo || mongoose.model("Todo", todosSchema);
 
 export default TodoModel;

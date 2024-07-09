@@ -40,11 +40,10 @@ export async function POST(req, res) {
       admin: user.isAdmin,
       isverified: user.isEmailVerified,
     };
-
+    
     const token = await jwt.sign(tokenData, process.env.JWT_SECRET, {
       expiresIn: "10d",
     });
-
 
     const response = NextResponse.json(
       {
@@ -55,7 +54,7 @@ export async function POST(req, res) {
       { status: 200 }
     );
 
-    response.cookies.set("jwt", token, {
+    response.cookies.set("jwtToken", token, {
       httpOnly: true,
     });
 

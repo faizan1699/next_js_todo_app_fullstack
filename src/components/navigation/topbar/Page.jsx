@@ -13,6 +13,7 @@ function Navbar() {
 
             const response = await axios.get("/api/users/auth/logout");
             console.log(response.data.message);
+            localStorage.removeItem('email');
             alert(response.data.message);
             router.push('/login');
         }

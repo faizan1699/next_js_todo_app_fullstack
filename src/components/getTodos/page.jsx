@@ -7,15 +7,7 @@ import Cookies from 'js-cookie';
 const GetTodos = () => {
     const [loading, setLoading] = useState(false);
     const [todo, setTodo] = useState([]);
-    const [token, setToken] = useState({});
 
-    useEffect(() => {
-        const jwtToken = Cookies.get('jwt'); // Replace 'jwt' with your cookie name
-        if (jwtToken) {
-            setToken(jwtToken);
-            console.log("user token data" , token);
-        }
-    }, []);
 
     const fetchTodos = async () => {
         setLoading(true);
@@ -28,7 +20,15 @@ const GetTodos = () => {
             console.error('Error fetching todos:', error);
         }
     };
-
+    const deleteTodo = async (todoId) => {
+        try {
+            const response = await axios.delete(`api/usersdata/delete_todo`, todoId);
+            console.log(response);
+            setTodo(todo.filter(todo => todo._id !== todoId));
+        } catch (error) {
+            console.error('Error deleting todo:', error);
+        }
+    };
     useEffect(() => {
         fetchTodos();
     }, []);
@@ -39,6 +39,7 @@ const GetTodos = () => {
                 <div>Loading, please wait...</div>
             ) : (
                 <div>
+
                     {todo.length === 0 ? (
                         <div>
                             Nothing to show, please add some todos to display.
@@ -49,6 +50,8 @@ const GetTodos = () => {
                                 <div>Todo: {data.todo}</div>
                                 <div>Description: {data.description}</div>
                                 <div>Created At: {data.createdAt}</div>
+                                <div>id: {data._id}</div>
+                                <button onClick={() => deleteTodo(data._id)}>Delete</button>
                             </div>
                         ))
                     )}

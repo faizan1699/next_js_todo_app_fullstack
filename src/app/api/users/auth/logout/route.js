@@ -7,7 +7,7 @@ export async function GET() {
       success: true,
     });
 
-    response.cookies.set("jwt", "", { httpOnly: true, expires: new Date(0) });
+    response.cookies.set("jwtToken", "", { httpOnly: true, expires: new Date(0) });
     return response;
   } catch (error) {
     return NextResponse.json(

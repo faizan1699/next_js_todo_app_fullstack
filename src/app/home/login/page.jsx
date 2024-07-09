@@ -18,7 +18,7 @@ const Login = () => {
     const [loading, setLoading] = useState(false);
     const [inputs, setInputs] = useState({
         email: "",
-        password: "12345678"
+        password: ""
     });
 
     const handleInputChange = (e) => {
@@ -30,9 +30,9 @@ const Login = () => {
     };
 
     const handleLogin = async (e) => {
-        e.preventDefault();
+       e.preventDefault();
         setMsg(null);
-
+     
         const { email, password } = inputs;
 
         if (!email) {
@@ -44,7 +44,7 @@ const Login = () => {
         else {
             setLoading(true);
             try {
-                const response = await axios.post("/api/users/auth/login", inputs );
+                const response = await axios.post("/api/users/auth/login", inputs);
                 setMsg(response?.data?.message);
                 setLoading(false);
                 router.push('/');

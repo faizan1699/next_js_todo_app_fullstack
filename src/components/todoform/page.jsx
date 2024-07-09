@@ -1,14 +1,18 @@
-"use client"
+
+"use client";
 
 import React, { useState } from 'react';
 import axios from 'axios';
 import { Box, Typography, TextField, Button, useMediaQuery } from '@mui/material';
+import Cookies from 'js-cookie';
 
 const TodoForm = () => {
+
+
     const matches = useMediaQuery('(min-width:650px)');
     const [msg, setMsg] = useState(null);
     const [loading, setLoading] = useState(false);
-    const [todos, setTodos] = useState({ todo: "", description: "" }); // Changed from title to todo
+    const [todos, setTodos] = useState({ todo: "", description: "" });
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -21,15 +25,35 @@ const TodoForm = () => {
         setMsg(null);
 
         try {
-            
-            const response = await axios.post("/api/usersdata/todos", todos);
+
+
+            const token = Cookies.get('jwtToken');
+            console.log(token)
+            const x = token.split('.')[1];
+            console.log(x)
+            const y = x.replace(/-/g, '+').replace(/_/g, '/');
+            const decodedPayload = JSON.parse(atob(y));
+
+            console.log(typeof token)
+            const config = {
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`,
+                },
+            };
+
+            const email = decodedPayload.email;
+            console.log(email);
+            const todosWithUser = { ...todos, email };
+
+            const response = await axios.post("/api/usersdata/todos", todosWithUser, config);
             setMsg(response.data.message);
             setLoading(false);
             setTimeout(() => setMsg(null), 8000);
 
         } catch (error) {
-            setMsg(error.response.data.message);
-            console.log(error);
+            // setMsg(error.response.data.message);
+            console.error('Error:', error);
             setLoading(false);
             setTimeout(() => setMsg(null), 8000);
         }
@@ -41,12 +65,12 @@ const TodoForm = () => {
             <Typography component="h6" variant="h5" className='text-center font-extrabold my-2'>{msg && msg}</Typography>
             <form onSubmit={handleTodoForm} method="post">
                 <TextField
-                    name="todo" // Changed from title to todo
+                    name="todo"
                     label="Todo"
                     size="small"
                     type='text'
                     onChange={handleInputChange}
-                    value={todos.todo} // Changed from title to todo
+                    value={todos.todo}
                     fullWidth
                     sx={{ mb: 1 }}
                     autoComplete='off'

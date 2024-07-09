@@ -8,31 +8,19 @@ export async function POST(req) {
     await connect();
 
     const reqBody = await req.json();
-    const { todo, description } = reqBody;
+    const { todo, description, email } = reqBody;
 
-    const userId = User._id;
-
-    if (!description && !todo) {
-      return NextResponse.json(
-        { message: "Title and description are required" },
-        { status: 400 }
-      );
-    } else if (!todo) {
-      return NextResponse.json(
-        { message: "Title are required" },
-        { status: 400 }
-      );
-    } else if (!description) {
-      return NextResponse.json(
-        { message: "description are required" },
-        { status: 400 }
-      );
+    // Find user by email
+    const user = await User.findOne({ email });
+    if (!user) {
+      return NextResponse.json({ message: "User not found" }, { status: 404 });
     }
 
+    // Create new TodoModel with user _id
     const newTodo = new TodoModel({
-      todo, // Changed from title to todo
+      todo,
       description,
-      user: userId,
+      user: user._id, 
     });
 
     const savedTodo = await newTodo.save();
@@ -43,7 +31,7 @@ export async function POST(req) {
       savedTodo,
     });
   } catch (error) {
-    console.log(error);
+    console.error("Error saving todo:", error);
     return NextResponse.json({ message: error.message }, { status: 500 });
   }
 }
