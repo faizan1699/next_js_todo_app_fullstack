@@ -54,7 +54,7 @@ export async function POST(req, res) {
       { status: 200 }
     );
 
-    response.cookies.set("jwtToken", token, {
+    response.cookies.set("TOKEN", token, {
       httpOnly: true,
     });
 

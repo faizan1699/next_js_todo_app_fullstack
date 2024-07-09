@@ -27,8 +27,11 @@ const TodoForm = () => {
         try {
 
 
-            const token = Cookies.get('jwtToken');
-            console.log(token)
+            const token = Cookies.get('TOKEN');
+            if (!token) {
+                throw new Error('JWT token s not found.');
+            }
+            console.log('Token:', token);
             const x = token.split('.')[1];
             console.log(x)
             const y = x.replace(/-/g, '+').replace(/_/g, '/');

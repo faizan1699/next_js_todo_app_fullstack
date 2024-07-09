@@ -7,7 +7,7 @@ import { connect } from "@/dbconfig/dbconfig"; // Assuming this is the correct i
 
 export async function GET(req) {
   try {
-    const token = req.cookies.get("jwtToken");
+    const token = req.cookies.get("TOKEN");
     const tokenValue = token && typeof token === "object" ? token.value : token;
 
     if (!tokenValue) {
