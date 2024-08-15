@@ -1,12 +1,13 @@
 // Import necessary modules and dependencies
 import { NextResponse } from "next/server";
 import jwt from "jsonwebtoken";
-import User from "@/models/usermodels"; // Assuming this is the correct import path for your User model
+// import User from "@/models/usermodels"; // Assuming this is the correct import path for your User model
 import TodoModel from "@/models/todos"; // Assuming this is the correct import path for your TodoModel
 import { connect } from "@/dbconfig/dbconfig"; // Assuming this is the correct import path for your database connection
 
 export async function GET(req) {
   try {
+    
     const token = req.cookies.get("TOKEN");
     const tokenValue = token && typeof token === "object" ? token.value : token;
 

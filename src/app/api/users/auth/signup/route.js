@@ -11,6 +11,7 @@ export async function POST(req) {
     const reqbody = await req.json();
 
     const { username, email, password } = reqbody;
+
     const user = await User.findOne({ email });
 
     if (user) {
@@ -40,6 +41,7 @@ export async function POST(req) {
       saveduser,
     });
   } catch (error) {
-    return NextResponse.json({ message: "error.messagesss" }, { status: 500 });
+    console.log(error.message)
+    return NextResponse.json({ message: error.message }, { status: 500 });
   }
 }

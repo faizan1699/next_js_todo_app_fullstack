@@ -44,13 +44,14 @@ const Login = () => {
         else {
             setLoading(true);
             try {
-                const response = await axios.post("/api/users/auth/login", inputs );
+                const response = await axios.post("/api/users/auth/login", inputs);
                 setMsg(response?.data?.message);
                 setLoading(false);
                 router.push('/');
                 setTimeout(() => {
                     setMsg(null);
                 }, 8000);
+                localStorage.setItem("email", email);
             } catch (error) {
                 console.error(error);
                 setMsg(error.response.data.message);

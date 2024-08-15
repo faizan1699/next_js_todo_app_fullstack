@@ -7,14 +7,10 @@ export async function GET() {
       success: true,
     });
 
-    response.cookies.set("TOKEN", "", { httpOnly: true, expires: new Date(0) });
+    response.cookies.set("token", "", { httpOnly: true, expires: new Date(0) });
     return response;
   } catch (error) {
-    return NextResponse.json(
-      {
-        message: error.message,
-      },
-      { status: 500 }
-    );
+    console.log("eror logout", error);
+    return NextResponse.json({ message: error.message }, { status: 500 });
   }
 }

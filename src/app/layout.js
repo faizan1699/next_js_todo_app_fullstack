@@ -4,7 +4,7 @@ import Navbar from "@/components/navigation/topbar/Page";
 
 export const metadata = {
   title: "Todo App",
-  description: "sove and see your todos ",
+  description: "save and see your todos ",
 };
 
 export default function RootLayout({ children }) {

@@ -33,13 +33,18 @@ export const sendEmailVerification = async ({ email, userId }) => {
       from: "todoapp@gmail.com",
       to: email,
       subject: "Verify your email",
-      html: `<p style="font-family: Arial, sans-serif; font-size: 16px; line-height: 1.5;">
-  <a href="${process.env.DOMAIN}/verifyemail?token=${hashedToken}" style="background-color: #007bff; color: #ffffff; text-decoration: none; padding: 10px 20px; border-radius: 5px; display: inline-block;">
-    Click here for verification</a>
-  to verify your email or copy and paste the link below in your browser.
-  <br>
-  <span style="font-size: 14px; color: #333333;">${process.env.DOMAIN}/verifyemail?token=${hashedToken}</span>
-</p>
+      html: `<div
+        style="width: 75%; background-color: rgb(214, 230, 214); padding: 50px 10px; margin: 20px auto; border-radius: 20px; ">
+        <a style="margin: auto; display: flex; justify-content: center; background-color: rgb(10, 10, 10); color: aliceblue; text-decoration: none;  padding: 10px 0; width: 300px; border-radius: 10px; "
+            href="${process.env.DOMAIN}/verifyemail?token=${hashedToken}">
+            Click here to verify email
+        </a>
+        <p style="font-family: Arial, sans-serif; font-size: 20px; line-height: 1.5; color: #630000;">
+            To verify your email or copy and paste the link below in your browser.
+            <br>
+            <span style="font-size: 14px; padding: 0 auto; color: #0d0179e8;">${process.env.DOMAIN}/verifyemail?token=${hashedToken}</span>
+        </p>
+    </div>`,
 `,
     };
 
